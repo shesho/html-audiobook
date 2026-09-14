@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Name The Subject Here</title>
+<style>
+/* Self-contained. No external stylesheets, no web fonts, no network requests.
+   Pick a palette that suits the subject; these values are a neutral start.
+   Every token is defined on bare :root first, then redefined for dark, so the
+   page still resolves when the viewer's theme is unset. */
+
+:root {
+  --ground:    #FBFBFC;
+  --surface:   #F2F3F6;
+  --ink:       #15171D;
+  --ink-soft:  #363A47;
+  --muted:     #646A7A;
+  --rule:      #DDDFE6;
+  --rule-hard: #C2C5D0;
+  --accent:    #7A3E1E;
+  --caution:   #8C3520;
+
+  --col: 36em;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:    #0D0F13;
+    --surface:   #171A21;
+    --ink:       #E8EAF0;
+    --ink-soft:  #C4C8D4;
+    --muted:     #8A90A0;
+    --rule:      #262A34;
+    --rule-hard: #3A3F4C;
+    --accent:    #E0A070;
+    --caution:   #E08A68;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground:    #0D0F13;
+  --surface:   #171A21;
+  --ink:       #E8EAF0;
+  --ink-soft:  #C4C8D4;
+  --muted:     #8A90A0;
+  --rule:      #262A34;
+  --rule-hard: #3A3F4C;
+  --accent:    #E0A070;
+  --caution:   #E08A68;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.66;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2 { margin: 0; font-family: var(--sans); line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
+p { margin: 0; }
+p + p { margin-top: 20px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+strong { font-weight: 650; color: var(--ink); }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 20;
+  background: var(--surface); color: var(--ink);
+  padding: 12px 18px; font-family: var(--sans); font-weight: 600;
+  border: 1px solid var(--rule-hard); border-radius: 3px;
+}
+.skip:focus { left: 12px; top: 12px; }
+
+.page { max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px); }
+.layout { display: grid; grid-template-columns: 1fr; }
+@media (min-width: 1080px) {
+  .layout { grid-template-columns: 200px minmax(0, 1fr); gap: clamp(40px, 5vw, 90px); }
+}
+
+/* Contents rail. Hidden on narrow screens; the heading outline still carries
+   structure for anyone navigating by heading. */
+.rail { display: none; }
+@media (min-width: 1080px) {
+  .rail { display: block; position: sticky; top: 0; align-self: start;
+          padding: 96px 0 60px; max-height: 100vh; overflow-y: auto; }
+}
+.rail-title { font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+              text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.rail a { display: block; font-family: var(--sans); font-size: 13px; font-weight: 500;
+          color: var(--muted); text-decoration: none; padding: 6px 0 6px 12px;
+          border-left: 2px solid transparent; }
+.rail a:hover { color: var(--ink); border-left-color: var(--rule-hard); }
+
+.body-col { padding: 0 0 110px; max-width: var(--col); }
+section { scroll-margin-top: 30px; }
+
+.hero { padding: clamp(56px, 9vw, 116px) 0 clamp(34px, 5vw, 60px); }
+.kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+          text-transform: uppercase; color: var(--accent); margin-bottom: 24px; }
+h1 { font-size: clamp(42px, 8vw, 76px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.0; }
+.deck { margin-top: 24px; font-size: clamp(19px, 2.2vw, 22px); line-height: 1.52; color: var(--ink-soft); }
+
+/* Both of these are h2. Only the class differs, so the heading outline stays
+   flat while the page still reads as sections containing entries. */
+.section-title { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+.entry-title   { font-size: 21px; font-weight: 680; letter-spacing: -0.012em; }
+
+.section-head { margin: clamp(64px, 8vw, 106px) 0 10px; padding-top: 24px; border-top: 2px solid var(--accent); }
+.section-eyebrow { font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em;
+                   text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+
+/* There is deliberately no summary block here. Each section opens with a ~40-word
+   plain-language summary written as the first ordinary paragraph of the section:
+   no label, no border, no box, no wrapper a screen reader would announce. */
+
+.entry { margin-top: 44px; }
+.oneline { margin-top: 10px; font-size: 19px; line-height: 1.5;
+           padding-left: 15px; border-left: 3px solid var(--accent); }
+
+/* Sub-labels are paragraphs, not headings, so they stay out of the outline. */
+.field { margin-top: 16px; }
+.field-label { display: block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+               letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.field.caution .field-label { color: var(--caution); }
+.field p { font-size: 16.5px; line-height: 1.58; color: var(--ink-soft); }
+
+.pull { margin: 40px 0; padding: 2px 0 2px 22px; border-left: 3px solid var(--accent);
+        font-size: 22px; line-height: 1.45; }
+
+aside { margin: 38px 0; padding: 2px 0 2px 22px; border-left: 1px solid var(--rule-hard);
+        color: var(--ink-soft); font-size: 17px; line-height: 1.6; }
+.aside-title { font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+               letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+ol.steps, ul.plain { margin: 28px 0; padding: 0 0 0 1.6em;
+                     display: flex; flex-direction: column; gap: 15px; }
+ol.steps li, ul.plain li { padding-left: 4px; line-height: 1.58; }
+ol.steps li::marker, ul.plain li::marker { color: var(--accent); }
+
+/* Narration pace. Reader apps (ElevenReader, Speechify, NaturalReader, browser
+   read-aloud) extract the page text and discard markup and CSS, so the stylesheet cannot
+   pace them. They do honour SSML break tags found in the text, which is what the .brk
+   elements below carry.
+
+   Hide those tags with opacity and NOTHING ELSE. display:none, visibility:hidden, zero
+   dimensions and clip-rect all remove the element from the extracted text and the pauses
+   silently stop. If pauses ever fail, raise this opacity first to confirm the tags are
+   still rendered before changing anything else. */
+.brk { opacity: 0; font-size: 6px; line-height: 1; margin: 0; user-select: none; }
+
+/* Kept only as a free enhancement. Expect it to do nothing: the CSS Speech module is
+   barely implemented, and a reader app never sees this stylesheet at all. Never set
+   voice-stress on strong or em, which makes a narrator hammer every emphasised word. */
+@media speech {
+  h1                { voice-rate: x-slow; pause-before: 1600ms; pause-after: 1600ms; }
+  h2.section-title  { voice-rate: x-slow; pause-before: 1100ms; pause-after: 1100ms; }
+  h2.entry-title    { voice-rate: slow;   pause-before: 800ms;  pause-after: 800ms; }
+  p, li             { voice-rate: normal; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#content">Skip to the main content</a>
+
+<div class="page">
+<div class="layout">
+
+  <nav class="rail" aria-label="Sections of this page">
+    <p class="rail-title">Sections</p>
+    <ol>
+      <li><a href="#executive-summary">Executive Summary</a></li>
+      <li><a href="#first">Section 1: Name of the first section</a></li>
+    </ol>
+  </nav>
+
+  <main class="body-col" id="content">
+
+    <header class="hero">
+      <p class="kicker">What kind of document this is</p>
+      <h1>Name the subject</h1>
+      <p class="deck">
+        One or two sentences that say what the document covers and who it is for.
+        Say it plainly and then stop, because a listener has no scroll bar and every
+        sentence spends their time.
+      </p>
+    </header>
+
+    <section id="executive-summary">
+      <div class="section-head">
+        <h2 class="section-title">Executive Summary</h2>
+      </div>
+      <p>
+        Around 300 words summarising the entire document for a smart newcomer with no
+        technical background. Plain, friendly, educational. Summarise the subject, never
+        the document: a reader who stops here should still leave with a correct picture
+        of what the whole document says. Round any figure to something a voice can say
+        in one breath, such as "more than 25 thousand lines of code", and name code the
+        way a person would say it out loud rather than by its file path.
+      </p>
+    </section>
+
+    <section id="first">
+      <div class="section-head">
+        <!-- Pause before the whole heading unit. Escaped so it renders as text, not an
+             element. 2s before a section title and 1.2s before an entry title are
+             reasonable starting points. No break before the document title: narration
+             starts there anyway, and the tag would be the first thing a reader sees. -->
+        <p class="brk">&lt;break time="2.0s" /&gt;</p>
+        <!-- The position line is the one piece of copy about the document that earns
+             its place: it is what lets a paused listener find their way back. -->
+        <p class="section-eyebrow">Section 1 of 9</p>
+        <h2 class="section-title">Name of the first section</h2>
+      </div>
+
+      <!-- The opening summary. About 40 words, simplest language available, no label
+           and no frame, written so it reads as the natural first paragraph. Name the
+           subject in full, because a listener may be resuming here after a day away. -->
+      <p>
+        The job queue is where slow work waits so the website can answer people instantly.
+        When somebody uploads a file, the website hands the work to the queue and replies
+        straight away, and a separate program finishes the work a moment later.
+      </p>
+
+      <p>
+        Then the content continues, in paragraphs of two to four sentences, each one
+        carrying a single idea. Name the subject again whenever a new idea starts, and
+        never lean on a sentence the listener may have missed.
+      </p>
+
+      <!-- A run of similar things: every heading carries the category, the position and
+           the name, so a listener always knows a new entry has started. -->
+      <p>The platform keeps its data in three separate stores, and each one exists for a
+         different reason.</p>
+
+      <div class="entry">
+        <p class="brk">&lt;break time="1.2s" /&gt;</p>
+        <h2 class="entry-title">Data store 1 of 3: Postgres</h2>
+        <p class="oneline">A one-sentence definition in ordinary words.</p>
+        <div class="field">
+          <p class="field-label">A plain label, not a clever one</p>
+          <p>Name Postgres again here rather than opening with "it".</p>
+        </div>
+        <div class="field caution">
+          <p class="field-label">Downsides</p>
+          <p>Name Postgres again. Say what goes wrong and when.</p>
+        </div>
+      </div>
+
+      <!-- The bridge. One casual line, about the subject, that hands the listener into
+           the next heading. Goes after the last entry so it is heard right before the
+           pause. Vary its shape from section to section. -->
+      <p>So which of these three stores actually holds the customer data? Only one of
+         them, and the next section is about what happens when it fails.</p>
+    </section>
+
+  </main>
+</div>
+</div>
+
+</body>
+</html>
