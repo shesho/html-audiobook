@@ -32,15 +32,22 @@ So the skill enforces a specific shape:
   way of hiding them deletes them from what the reader app extracts.
 - **No file paths, no hashes, no exact six-digit numbers.** A voice cannot say them
   usefully.
-- **Names kept, jargon glossed.** "LangSmith, the outside service that records every
-  conversation with the AI assistant" rather than "an outside service". Simplify the
-  explanation, never the facts.
+- **Names kept, jargon glossed.** "The monitoring service, the outside tool that
+  records every error the application throws" rather than "an outside service".
+  Simplify the explanation, never the facts.
+- **Every verdict says how we know.** A sentence that calls something wrong, missing
+  or broken points to the evidence in the same breath: a source the reader can open,
+  the root cause, or the section of the document that shows it. No footnotes, no
+  appendix, nothing a listener cannot follow by ear.
 - **One self-contained file.** Everything inline, nothing loaded from outside, works
   offline and as an email attachment.
 
-There is also an adversarial review pass: three subagents read the draft as a clarity
-reviewer, as a 17-year-old intern asking the basic questions, and as a listener who
-only ever hears the first two paragraphs of each section.
+There is also an adversarial review pass with four subagents. Three read the draft
+alone: a clarity reviewer, a 17-year-old intern asking the basic questions, and a
+listener who only ever hears the first two paragraphs of each section. The fourth is
+a fact-checker with access to the source material. It goes and looks, verifies every
+pointer the draft already carries, finds the ones that are missing, and reports any
+claim it cannot support so it gets downgraded or cut.
 
 ## Install
 
@@ -62,9 +69,11 @@ git -C ~/.claude/skills/html-audiobook pull
 
 Just ask for the thing. Claude picks the skill up on its own:
 
-> Explain how the payments service works, as an HTML page I can listen to.
+> Explain how the billing system works, as an HTML page I can listen to.
 
 > Walk me through this repo for a new engineer. Audiobook-friendly HTML.
+
+> Review these five vendor proposals and tell me which one to pick, as something I can listen to on the train.
 
 Or invoke it directly with `/html-audiobook`.
 
@@ -74,7 +83,7 @@ Then open the file in ElevenReader and go for a walk.
 
 | File | What it is |
 | --- | --- |
-| `SKILL.md` | The skill: workflow, document structure, the review pass, and 18 rules. |
+| `SKILL.md` | The skill: workflow, document structure, the review pass, and 19 rules. |
 | `references/page-template.html` | Starting skeleton with the theme handling and type scale already set up. |
 
 ## Feedback

@@ -25,7 +25,7 @@ Some languages make a rule matter more, not less. Spanish and Italian normally d
 
 ## Workflow
 
-1. Gather the real material first. Read the repository, the documents, the data. An explainer built on guesses reads fluently and teaches nothing.
+1. Gather the real material first. Read the repository, the documents, the data. An explainer built on guesses reads fluently and teaches nothing. While gathering, keep a private note of where each fact came from: which report, which file, which dashboard, which search. Rule 19 asks the document to say how each verdict is known, and the fact-checker in the review pass verifies those pointers. A ledger kept during gathering costs nothing. Reconstructing one afterwards costs a great deal.
 2. Decide the through-line: what the reader should understand by the end, and in what order the pieces have to arrive for that to happen.
 3. Write the first draft following the document structure and the rules below.
 4. Run the adversarial review described in "The adversarial review" and fold everything it surfaces back into the draft.
@@ -40,6 +40,8 @@ Some languages make a rule matter more, not less. Spanish and Italian normally d
 The document opens with a section titled "Executive Summary": one summary of the entire document, around 300 words. Write it for a 17-year-old intern in their first week: non-technical language, clear, friendly, educational. No silly or childish metaphors, and no dumbing down of the facts. Just say plainly what the document covers, what the main findings or mechanisms are, and why they matter. Name the products, vendors and figures in the summary exactly as the body does. A summary that says "an outside company" where the body says LangSmith has hidden the finding from the one reader who stops there.
 
 A reader who stops after the executive summary should still leave with a correct, complete picture of what the whole document says. Summarise the subject, never the document: "our platform stores every job application in one database" carries content, "this document walks through our architecture" does not.
+
+A verdict in the summary still says how it is known, under rule 19, and the summary has room for only one shape: the forward pointer. "The reservation data is often wrong, and section 7 shows why." The reader who stops here still hears that the evidence exists and where it sits.
 
 ### The opening summary of each section
 
@@ -96,11 +98,14 @@ So where does all of this information actually live? In seven different places, 
 
 ## The adversarial review
 
-After the first draft is written, launch three subagents in parallel. Each one receives the full draft, poses no edits itself, and returns findings for you to act on.
+After the first draft is written, launch four subagents in parallel. Each one receives the full draft, poses no edits itself, and returns findings for you to act on. The first three work from the draft alone. The fourth is different in kind: it also receives the location of the material the draft was built from, and it has tool access, because its job is to go and look.
 
 1. **The clarity reviewer** reviews for clarity, straightforwardness and simplicity of language. It flags obscure metaphors, excessive jargon, overreliance on abstractions, and convoluted ideas, quoting each offending passage so you can find it. It never flags a product, vendor, company or environment name as jargon. A name is information, and the remedy for an unfamiliar one is a plain gloss beside it, which the reviewer may ask for, never removal.
 2. **The intern** poses as a 17-year-old intern who is new to the project and asks the basic questions the document should answer but might not: what a term means, why something exists, how two parts connect, what happens when something fails, and which actual product or company is behind a phrase like "an outside service" or "a monitoring tool".
 3. **The interrupted listener** reads only the first two paragraphs of each section, in isolation, with every other section hidden. It reports each section where those paragraphs do not say what the section is about, lean on a pronoun with no antecedent, refer back to something the listener would not have heard, or open with anything other than a roughly 40-word plain summary. It also flags every heading that names a thing without naming its category and position, every path or exact large number, and every paragraph longer than about four sentences.
+4. **The fact-checker** receives the draft and access to the material the draft was built from. It lists every claim that carries a verdict word or a figure, and for each one reports one of four states: supported, with the pointer already in the text; supported but unanchored, with the spoken-form pointer it found for you to add; unsupported, because it searched the material and found nothing; or contradicted, quoting what the material actually says. It verifies a pointer that is already present rather than trusting it, by opening the named report or section and confirming it says what the claim says. It checks that every forward pointer lands in a section that actually holds the evidence. It never proposes evidence it did not itself find, and it reports an opinion presented as a fact as unsupported. Rule 19 defines what counts as a claim and what counts as a pointer.
+
+The fact-checker is the slowest of the four because it opens sources, which is why it runs in the same parallel batch rather than after the others.
 
 Then revise the draft yourself:
 
@@ -108,6 +113,8 @@ Then revise the draft yourself:
 - Where the clarity reviewer wants a name softened and the intern wants to know what the name is, both are right: the name stays and a plain gloss goes beside it. Rule 18 says how.
 - Answer every intern question naturally and explicitly inside the existing document structure, in the section where the answer belongs. Never bolt on a FAQ, a Q&A appendix, or a "common questions" section. If a question has no natural home, that is a sign a section is missing or the order is wrong, and the structure is what to fix.
 - Fix every opening the interrupted listener could not follow. Fixing these usually means naming the subject again, which costs a few words and is always worth it.
+- Add every pointer the fact-checker found, in one of the spoken shapes rule 19 allows. Downgrade or cut every claim it could not support: "we could not confirm" is an honest sentence, and an evidence-shaped sentence with nothing behind it is not. Where it found a contradiction, the source wins, and the claim is rewritten to match.
+- Rewrites from the clarity reviewer tend to strip trailing clauses, and the trailing clause is where the evidence usually sits. The last pass re-checks for this.
 
 ## The rules
 
@@ -241,6 +248,8 @@ needs a different guarantee.
 Delete "how to use this page" sections, "what you will learn" preambles, and closing paragraphs that summarise what was just said. A short opening that establishes the subject is not metacopy. A paragraph about the document's own structure is.
 
 There are two exceptions, and only two. The short "Section 3 of 9" line above each section title is navigation for a listener who paused the narration yesterday and needs to find their place, and it pays for its four words. The one-line bridge at the end of each section, described under document structure, hands the listener into the next heading, and it pays for itself only when it is about the subject rather than the document. Nothing else about the document earns its place.
+
+An evidence pointer is not metacopy. "The sync data is often wrong, and section 11 shows why" is a sentence about the sync data, and the pointer tells the listener where the proof sits. Rule 19 asks for these, and this rule does not cut them.
 
 ### 7. Only `<h1>` and `<h2>`
 
@@ -384,6 +393,8 @@ twice for exactly that reason.
 
 Give each idea a plainly named home, and let the listener drop out of one and rejoin at the next. Frequent short sections with honest names beat a few long sections with clever ones, every time.
 
+A pointer back to an earlier section is allowed when the sentence restates the fact first. "The sync job writes the field twice, which section 4 covered" gives the listener the fact and then tells them where the detail lives. "As section 4 showed" on its own gives them nothing and is still cut.
+
 ### 15. Number the items in a list of things, and name the category in every heading
 
 Whenever the document works through a set of similar things, one after another, treat it like a spoken glossary. Every entry gets its own heading, and every heading carries three parts: the category, the position, and the name.
@@ -506,6 +517,32 @@ The DO versions are no harder to listen to. Each is one name longer and one fact
 
 The same standard applies to headings under rule 15, to the executive summary, and to every rewrite the clarity reviewer proposes: the fix for an unfamiliar name is a plain phrase beside it, never a plain phrase in place of it.
 
+### 19. Every verdict says how we know
+
+A document that says something is wrong, missing, unused, broken or misleading has made a promise: that someone looked. The listener cannot see what was looked at, so the sentence has to say it. A verdict with no evidence beside it is a hot take, and a listener who wants to dig deeper has nowhere to go.
+
+The evidence is short and spoken. One clause, in the same sentence or the next, in one of three shapes.
+
+- **Point to a source the reader can open.** Name it the way a person would say it, under rule 16: "the fifth audit report", "the error dashboard for the API service", "the README of the sync service", "the last three weeks of worker logs". Never a path, a hash or a bracketed citation.
+- **Point to the cause.** "The smoking gun is the API service, which writes the field before it validates it." A listener who knows the cause can check it themselves.
+- **Point forward in the document.** "Section 11 shows why." The sections are numbered, so a listener can hold that. A forward pointer is a debt: the named section has to actually contain the evidence, and the fact-checker confirms that it does.
+
+DON'T: `The data stored there is quite often wrong. On the other hand...`
+
+DO: `The data stored there is quite often wrong, as the fifth audit report shows. On the other hand...`
+
+DO: `The data stored there is quite often wrong, and the smoking gun is the API service. On the other hand...`
+
+DO: `The data stored there is quite often wrong, and section 11 shows why. On the other hand...`
+
+Three kinds of claim need extra care. A negative, such as "nothing writes to this table", says how the absence was established: "a search of the whole codebase finds no writer". A figure says where it was counted: "in a sample of two hundred rows, a quarter had no city". An opinion says that it is one, and names the fact it rests on: "in my judgement the queue is the weak point, because it is the only piece with no retry".
+
+A claim that cannot be given evidence is downgraded, never dressed up. Write "we could not confirm whether the job still runs" rather than an evidence-shaped sentence with nothing behind it. Invented evidence is worse than none, because it survives every reviewer except the reader who goes looking.
+
+Not every sentence carries evidence. A description of how something works is its own evidence when the reader can open the thing described. Verdict words are what trigger the rule: wrong, broken, missing, unused, never, always, every, nobody, misleading, dangerous, and any figure.
+
+The evidence lives inline or not at all. Footnotes, endnotes, superscript markers and an evidence appendix are the obvious way to satisfy this rule on screen, and every one of them fails in audio: a screen reader announces "link, one" and the listener never reaches the note. Rule 16's exception for a path the reader will type is the only door for an identifier, and this rule does not widen it.
+
 ## Making it worth listening to
 
 Everything above keeps a listener from getting lost. It does not, on its own, make them want to keep listening. Prose that is scrupulously plain can still arrive as a flat drone, especially through a synthetic voice that adds no warmth of its own, and a listener whose attention is already divided will drift away from a drone no matter how clear it is.
@@ -519,6 +556,8 @@ When a document needs to hold attention rather than merely be followed, reach fo
 **Voice the obvious objection before making the claim.** "Does that make LinkedIn unbeatable in Latin America? Look at the price first." The listener who was about to disagree now hears you disagreeing with yourself, which is far more persuasive than a claim delivered flat.
 
 **Give a number its consequence in the next sentence.** A figure alone is inert in audio. "Roughly one application in eight was fake. At a company that builds fraud detection for a living."
+
+**Give a verdict its evidence in the next breath.** "The nightly sync is broken. The worker logs show it failing every night since March." Evidence delivered immediately reads as confidence, and confidence holds attention far better than assertion does. Rule 19 asks for the evidence anyway, and placing it this close is what makes it land.
 
 **Let a paragraph land on a short sentence** rather than trailing off into qualification. "Right product. Unproven business."
 
@@ -551,6 +590,8 @@ Look at every list of similar things and check that each heading carries its cat
 Look for anything a voice cannot say usefully: a file path, an exact count in the thousands, a commit hash, a long identifier. Replace each one with the name a person would use out loud, or with a rounded figure.
 
 Then look for the opposite failure. Find every "an outside service", "a third-party tool", "the provider", "a monitoring tool" and "the recording service", and ask what its name is. If you know the name, write it, with a plain gloss beside it the first time it appears in that section. A reader who cannot tell which company holds their customers' data has not been given a simpler document, only a less useful one.
+
+Then find every verdict word and every figure, and ask how the sentence says we know. Wrong, broken, missing, unused, never, always, every, nobody, misleading, and any count or percentage: each one either points to a source, a cause or a later section, or it is a hot take. Confirm every forward pointer lands in a section that actually holds the evidence. Then check the sentences the clarity reviewer rewrote, because a rewrite that tightens a sentence usually drops its last clause, and the last clause is where the evidence was.
 
 Then confirm the page stands on its own: nothing loaded from outside, colours that resolve whether the viewer's theme is light, dark or unset, and a structure a screen reader can navigate.
 
